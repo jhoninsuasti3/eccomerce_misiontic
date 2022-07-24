@@ -99,10 +99,10 @@ WSGI_APPLICATION = 'marketagro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
+        'NAME': 'd60n93j5ptufov',
+        'USER': 'erprwfhdzdktlu',
+        'PASSWORD': '626d01beccf0d165b5eb16b93227c4233af4a80d9c1d8ea60b55a3c70e719f66',
+        'HOST': 'ec2-44-206-214-233.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
