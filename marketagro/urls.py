@@ -15,7 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
+from marketApp import views
 
 urlpatterns = [
+    path('login/', TokenObtainPairView.as_view()),
+    path('refresh/', TokenRefreshView.as_view()),
     path('admin/', admin.site.urls),
+    path('user/', views.UserCreateView.as_view()),
+    path('user/', views.UserDetailView.as_view()),
+    path('product/<int:pk>/', views.ProductoCreateView.as_view()),
+    path('compra/<int:pk>/', views.CompraCreateView.as_view()),
+    path('compra/<int:pk>/', views.CompraDetailView.as_view()),
+    path('detalle/<int:pk>/', views.DetalleCreateView.as_view()),
 ]
