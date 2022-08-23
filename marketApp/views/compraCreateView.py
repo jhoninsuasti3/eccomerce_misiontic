@@ -20,15 +20,17 @@ class CompraCreateView(generics.RetrieveAPIView):
         valid_data = tokenBackend.decode(token,verify=False)
 
         if valid_data['user_id'] != request.data['client']:
+            print(valid_data['user_id'])
+            print(request.data['client'])
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
 
-        print("----------------------------------------------------")
-        print(request.data)
-        print("----------------------------------------------------")
+        
         serializer = CompraSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        objetoRes = serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(
+            CompraSerializer.actualizarId(objetoRes),
+            status=status.HTTP_201_CREATED
+            )

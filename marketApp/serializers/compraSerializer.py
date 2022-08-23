@@ -23,7 +23,7 @@ class CompraSerializer(serializers.ModelSerializer):
         detalles = Detalle.objects.filter(compra_id=compraActual.id)  
         detallesResponse = []
         for detalle in detalles:
-            detallesResponse.append(DetalleSerializer.to_representation(detalle))
+            detallesResponse.append(DetalleSerializer.respuesta(detalle))
         
         return {
             'id': compraActual.id,
@@ -31,4 +31,12 @@ class CompraSerializer(serializers.ModelSerializer):
             'productos':  detallesResponse,
             'total':compraActual.total,
             'email': user.email
+        }
+
+    def actualizarId(obj):
+        print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+        print(obj)
+        print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+        return {
+            'id': obj.id
         }

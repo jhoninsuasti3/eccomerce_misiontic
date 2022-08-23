@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField('Password', max_length = 256)
     ciudad = models.CharField('ciudad', max_length = 20)
     direccion = models.CharField('direccion', max_length = 40)
-    rol = models.CharField('rol', max_length = 30)
+    rol = models.CharField('rol', max_length = 30, blank=False, default=None)
     email = models.EmailField('Email', max_length = 100)
     name = models.CharField('name', max_length = 30)
     

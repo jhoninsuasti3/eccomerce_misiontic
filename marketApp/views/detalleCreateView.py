@@ -12,7 +12,7 @@ from marketApp.models.detalle import Detalle
 from marketApp.serializers.detalleSerializer import DetalleSerializer
 
 class DetalleCreateView(generics.RetrieveAPIView):
-    queryset = User.objects.all()
+    queryset = Detalle.objects.all()
     serializer_class = DetalleSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -25,14 +25,67 @@ class DetalleCreateView(generics.RetrieveAPIView):
             stringResponse = {'detail':'Unauthorized Request'}
             return Response(stringResponse, status=status.HTTP_401_UNAUTHORIZED)
 
-        print("----------------------------------------------------")
         serializer = DetalleSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print(serializer)
-        print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        serializer.save()
+        stringRespuesta = serializer.save()
 
         return Response(
+            DetalleSerializer.respuesta(stringRespuesta),
             status=status.HTTP_201_CREATED
+            )
+    
+    def get(self, request, *args, **kwargs):
+    
+        token = request.META.get('HTTP_AUTHORIZATION')[7:]
+        tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
+        valid_data = tokenBackend.decode(token,verify=False)
+        stringStatus = status.HTTP_200_OK
+        stringResponse = DetalleSerializer.crearRespuesta(clave = valid_data['user_id'], detalle = kwargs['pk'])
+        print(stringResponse)
+
+        for key in stringResponse:
+            if key == 'detail' :
+                stringStatus = status.HTTP_401_UNAUTHORIZED
+            
+        return Response(
+            stringResponse,
+            status=stringStatus
+            )
+
+    def put(self, request, *args, **kwargs):
+
+        token = request.META.get('HTTP_AUTHORIZATION')[7:]
+        tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
+        valid_data = tokenBackend.decode(token,verify=False)
+        stringStatus = status.HTTP_202_ACCEPTED
+        stringRespuesta = DetalleSerializer.actualizar(request, clave = valid_data['user_id'], detalle = kwargs['pk'])
+
+        for key in stringRespuesta:
+            if key == 'detail':
+                stringStatus = status.HTTP_401_UNAUTHORIZED
+                respuesta = stringRespuesta
+            if key == 'estado':
+                respuesta = None
+        return Response(
+            respuesta,
+            status=stringStatus
+            )
+
+    def delete(self, request, *args, **kwargs):
+        token = request.META.get('HTTP_AUTHORIZATION')[7:]
+        tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
+        valid_data = tokenBackend.decode(token,verify=False)
+
+        stringStatus = status.HTTP_202_ACCEPTED
+        stringRespuesta = DetalleSerializer.eliminar(clave = valid_data['user_id'], detalle = kwargs['pk'])
+
+        for key in stringRespuesta:
+            if key == 'detail':
+                stringStatus = status.HTTP_401_UNAUTHORIZED
+                respuesta = stringRespuesta
+            if key == 'estado':
+                respuesta = None
+        return Response(
+            respuesta,
+            status=stringStatus
             )
